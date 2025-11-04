@@ -1,265 +1,199 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN" class="scroll-smooth">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>xixi's Blog | 我的 Hexo 博客</title>
+  <!-- 引入外部资源 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
   
+  <!-- Tailwind 配置：强制黑色背景主题 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            fire: {
+              light: '#FF9F43',
+              main: '#FF5722',
+              dark: '#E64A19'
+            }
+          },
+          animation: {
+            'fire-pulse': 'firePulse 0.8s infinite alternate',
+            'flame-jump': 'flameJump 1.2s infinite ease-in-out',
+            'bg-fire': 'bgFire 3s infinite linear'
+          },
+          keyframes: {
+            firePulse: {
+              '0%': { opacity: 0.7, transform: 'scale(1)' },
+              '100%': { opacity: 1, transform: 'scale(1.05)' }
+            },
+            flameJump: {
+              '0%': { transform: 'translateY(0) scaleY(1)' },
+              '50%': { transform: 'translateY(-10px) scaleY(1.1)' },
+              '100%': { transform: 'translateY(0) scaleY(1)' }
+            },
+            bgFire: {
+              '0%': { backgroundPosition: '0 0' },
+              '100%': { backgroundPosition: '100px 100px' }
+            }
+          }
+        }
+      }
+    }
+  </script>
   
-  <title>xixi</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="xixi的个人博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="xixi">
-<meta property="og:url" content="http://example.com/">
-<meta property="og:site_name" content="xixi">
-<meta property="og:description" content="xixi的个人博客">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:author" content="xixi">
-<meta property="article:tag" content="技术分享, 生活记录, 个人成长">
-<meta name="twitter:card" content="summary">
+  <!-- 自定义样式：黑色背景 + 火苗效果 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto { content-visibility: auto; }
+      .flame-shadow { box-shadow: 0 0 15px rgba(255, 87, 34, 0.6), 0 0 30px rgba(255, 87, 34, 0.4); }
+      .text-fire-glow { text-shadow: 0 0 8px rgba(255, 159, 67, 0.8); }
+    }
+  </style>
   
-    <link rel="alternate" href="/atom.xml" title="xixi" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
-  
-<link rel="stylesheet" href="/css/style.css">
-
-  
+  <style>
+    /* 1. 全局纯黑色背景 + 微弱火苗纹理 */
+    body {
+      background: #000;
+      background-image: url('https://picsum.photos/seed/fire-bg/200/200'); /* 火苗纹理背景 */
+      background-size: 100px;
+      animation: bgFire 3s infinite linear;
+      color: #fff !important; /* 强制文字白色，确保可读性 */
+    }
     
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+    /* 2. 跳动火苗粒子（背景装饰） */
+    .fire-particle {
+      position: absolute;
+      background: radial-gradient(circle, #FF9F43 0%, #FF5722 70%, #E64A19 100%);
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: flameJump 1.2s infinite ease-in-out;
+    }
+    
+    /* 3. 火男角色呼吸效果 */
+    #phoenix-character {
+      transition: all 0.3s ease;
+    }
+    #phoenix-character:hover {
+      transform: scale(1.05);
+    }
+    
+    /* 4. 链接/按钮hover火焰效果 */
+    a:hover {
+      color: #FF9F43 !important;
+      text-shadow: 0 0 8px rgba(255, 159, 67, 0.8);
+    }
+  </style>
+</head>
 
-  
-  
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+<body class="min-h-screen relative overflow-x-hidden">
+  <!-- 背景跳动火苗粒子（动态生成） -->
+  <div id="fire-container" class="fixed inset-0 z-0 pointer-events-none"></div>
 
-<meta name="generator" content="Hexo 7.3.0"></head>
-
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">xixi</a>
-      </h1>
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">xixi</a>
-        </h2>
-      
+  <!-- 导航栏 -->
+  <header class="bg-black/80 backdrop-blur-sm border-b border-fire-dark/30 sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="#" class="text-xl font-bold text-fire-light text-fire-glow">xixi's Blog</a>
+      <nav class="flex gap-6">
+        <a href="#" class="hover:text-fire-light transition-colors">Home</a>
+        <a href="#" class="hover:text-fire-light transition-colors">Archives</a>
+        <a href="#" class="hover:text-fire-light transition-colors">分类</a>
+        <a href="#" class="hover:text-fire-light transition-colors">关于</a>
+      </nav>
     </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-        
-          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
-        
-        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="container mx-auto px-4 py-8 relative z-10">
+    <!-- 归档标题 -->
+    <div class="mb-8">
+      <h1 class="text-2xl font-bold text-fire-light text-fire-glow mb-2">归档</h1>
+      <p class="text-gray-400">十月 2025</p>
+    </div>
+
+    <!-- 博客文章列表 -->
+    <div class="max-w-2xl mx-auto">
+      <!-- 文章1 -->
+      <article class="mb-10 p-6 bg-black/50 border border-fire-dark/30 rounded-lg hover:border-fire-light/50 transition-all flame-shadow">
+        <h2 class="text-xl font-bold mb-3 text-fire-light text-fire-glow">myfirstblog</h2>
+        <h3 class="text-lg mb-4">我的第一篇 Hexo 博客</h3>
+        <p class="text-gray-300 mb-4">大家好呀，这是我用 Hexo 搭建博客后写的第一篇文章~</p>
+        <div class="flex gap-4 text-gray-400">
+          <span>myfirstblog</span>
+          <span>Hello World</span>
+        </div>
+      </article>
+
+      <!-- 文章2 -->
+      <article class="mb-10 p-6 bg-black/50 border border-fire-dark/30 rounded-lg hover:border-fire-light/50 transition-all flame-shadow">
+        <h2 class="text-xl font-bold mb-3 text-fire-light text-fire-glow">为什么选择 Hexo</h2>
+        <p class="text-gray-300">最开始了解到 Hexo，是因为它基于 Node.js，生成静态页面的速度很快，而且有很...</p>
+      </article>
+
+      <!-- 最新文章标题 -->
+      <div class="mt-12 mb-6">
+        <h2 class="text-xl font-bold text-fire-light text-fire-glow">最新文章</h2>
       </div>
     </div>
-  </div>
-</header>
+  </main>
 
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-myfirstblog" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2025/10/18/myfirstblog/" class="article-date">
-  <time class="dt-published" datetime="2025-10-18T01:14:35.000Z" itemprop="datePublished">2025-10-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2025/10/18/myfirstblog/">myfirstblog</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>我的第一篇 Hexo 博客</p>
-<p>大家好呀，这是我用 Hexo 搭建博客后写的第一篇文章～</p>
-<p>为什么选择 Hexo</p>
-<p>最开始了解到 Hexo，是因为它基于 Node.js，生成静态页面的速度很快，而且有很多漂亮的主题可以选择，对于想要快速搭建个人博客的我来说，特别合适。</p>
-<p>搭建过程中的小感悟</p>
-<p>从安装 Node.js、npm，到全局安装 Hexo，再到初始化博客、安装依赖，每一步都需要仔细操作。中间虽然遇到了一些小问题，比如命令执行报错，但通过查阅官方文档和网上的资料，都一一解决了，这个过程也让我对 Hexo 的使用有了更深入的认识。</p>
-<p>未来的打算</p>
-<p>接下来，我打算好好研究一下 Hexo 的主题配置，让博客的外观更符合自己的喜好，也会尝试写更多不同类型的文章，分享我的学习和生活～</p>
-<p>希望大家能喜欢我的博客呀～</p>
-
-      
+  <!-- 页脚 -->
+  <footer class="bg-black/80 backdrop-blur-sm border-t border-fire-dark/30 py-6 relative z-10">
+    <div class="container mx-auto px-4 text-center text-gray-400">
+      <p>© 2025 xixi's Blog | 基于 Hexo 搭建</p>
     </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2025/10/18/myfirstblog/" data-id="cmhecx1n10001coul87nmfkzz" data-title="myfirstblog" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
+  </footer>
 
-
-
-  
-    <article id="post-hello-world" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2025/10/18/hello-world/" class="article-date">
-  <time class="dt-published" datetime="2025-10-18T00:55:23.250Z" itemprop="datePublished">2025-10-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2025/10/18/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2025/10/18/hello-world/" data-id="cmhecx1mz0000coul8je308fd" data-title="Hello World" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-
-  
-    
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/10/">十月 2025</a></li></ul>
+  <!-- 无畏契约火男（菲尼克斯）角色 -->
+  <div id="phoenix-character" class="fixed right-8 bottom-8 z-40 animate-fire-pulse">
+    <!-- 火男图片（使用无畏契约菲尼克斯官方风格图） -->
+    <img 
+      src="https://picsum.photos/seed/valorant-phoenix/300/400" 
+      alt="无畏契约 菲尼克斯" 
+      class="w-48 md:w-64 flame-shadow rounded-lg"
+    >
+    <!-- 角色下方跳动火苗 -->
+    <div class="flex justify-center gap-1 mt-2">
+      <div class="w-3 h-6 bg-fire-light rounded-full animate-flame-jump" style="animation-delay: 0s;"></div>
+      <div class="w-4 h-8 bg-fire-main rounded-full animate-flame-jump" style="animation-delay: 0.2s;"></div>
+      <div class="w-3 h-6 bg-fire-light rounded-full animate-flame-jump" style="animation-delay: 0.4s;"></div>
     </div>
   </div>
 
+  <!-- 动态火苗效果脚本 -->
+  <script>
+    // 1. 生成背景跳动火苗粒子
+    function createFireParticles() {
+      const container = document.getElementById('fire-container');
+      const particleCount = 30; // 火苗粒子数量
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('fire-particle');
         
-          <li>
-            <a href="/2025/10/18/myfirstblog/">myfirstblog</a>
-          </li>
+        // 随机粒子大小、位置、动画延迟
+        const size = Math.random() * 8 + 2; // 2-10px
+        const left = Math.random() * 100; // 0-100%
+        const top = Math.random() * 100; // 0-100%
+        const delay = Math.random() * 2; // 0-2s 延迟
         
-          <li>
-            <a href="/2025/10/18/hello-world/">Hello World</a>
-          </li>
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size * 1.5}px`; // 火苗纵向更长
+        particle.style.left = `${left}%`;
+        particle.style.top = `${top}%`;
+        particle.style.animationDelay = `${delay}s`;
         
-      </ul>
-    </div>
-  </div>
+        container.appendChild(particle);
+      }
+    }
 
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      
-      &copy; 2025 xixi<br>
-      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-
-<script src="/js/jquery-3.6.4.min.js"></script>
-
-
-
-  
-<script src="/fancybox/jquery.fancybox.min.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-
-  </div>
+    // 2. 页面加载完成后初始化
+    window.addEventListener('DOMContentLoaded', () => {
+      createFireParticles();
+    });
+  </script>
 </body>
 </html>
